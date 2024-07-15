@@ -1,0 +1,55 @@
+import requests
+import json
+
+BASE_URL = "http://127.0.0.1:5000/items"
+
+def get_items():
+    response = requests.get(BASE_URL)
+    if response.status_code == 200:
+        items = response.json()
+        print("Items:", json.dumps(items, indent=2))
+    else:
+        print("Failed to retrieve items.")
+
+def get_item(item_id):
+    response = requests.get(f"{BASE_URL}/{item_id}")
+    if response.status_code == 200:
+        item = response.json()
+        print("Item:", json.dumps(item, indent=2))
+    else:
+        print(f"Failed to retrieve item with ID {item_id}.")
+
+def create_item(name, description):
+    new_item = {"name": name, "description": description}
+    response = requests.post(BASE_URL, json=new_item)
+    if response.status_code == 201:
+        item = response.json()
+        print("Created Item:", json.dumps(item, indent=2))
+    else:
+        print("Failed to create item.")
+
+def update_item(item_id, name, description):
+    update_data = {"name": name, "description": description}
+    response = requests.put(f"{BASE_URL}/{item_id}", json=update_data)
+    if response.status_code == 200:
+        item = response.json()
+        print("Updated Item:", json.dumps(item, indent=2))
+    else:
+        print(f"Failed to update item with ID {item_id}.")
+
+def delete_item(item_id):
+    response = requests.delete(f"{BASE_URL}/{item_id}")
+    if response.status_code == 200:
+        print(f"Item with ID {item_id} deleted.")
+    else:
+        print(f"Failed to delete item with ID {item_id}.")
+
+if __name__ == '__main__':
+    # Testando as funções
+    create_item("New Item", "This is a new item.")
+    get_items()
+    get_item(1)
+    update_item(1, "Updated Item", "This is the updated item description.")
+    get_item(1)
+    delete_item(1)
+    get_items()
